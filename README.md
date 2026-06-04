@@ -118,7 +118,56 @@ Joka lista alkio:
 Loppu
 ```
 
-### Arithmetic and strings
+### String operations
+
+String literals can be bare single-word values or quoted multi-word strings. Escape sequences: `\n`, `\t`, `\\`, `\"`. Interpolation with `{muuttuja}` works inside quoted strings.
+
+| Keyword | Alias | What it does |
+|---|---|---|
+| `Pilko` | `Pilk` | Split string by separator → list |
+| `Korvaa` | `Korv` | Replace substring → string |
+| `Sisaltaa` | `Sis` | Check if string contains substring → boolean |
+| `Trimmaa` | `Trim` | Trim whitespace → string |
+| `Isot` | — | Uppercase → string |
+| `Pienet` | — | Lowercase → string |
+| `Pituus` | — | Length of string (also works on lists) |
+
+```aa
+Mu osat: Pilk "yksi kaksi kolme" " "
+Sano: "{Pituus osat}"   -- 3
+Mu korvattu: Korv "aabbcc" "bb" "XX"
+Sano: "{korvattu}"       -- aaXXcc
+Mu onko: Sis "moi maailma" "maa"
+Sano: "{onko}"           -- kyllä
+Mu iso: Isot "ääkköset"
+Sano: "{iso}"            -- ÄÄKKÖSET
+```
+
+### File I/O
+
+| Keyword | Alias | Syntax | Returns | Notes |
+|---|---|---|---|---|
+| `Lue tiedosto` | `Lue` | `Lue tiedosto "polku"` | string | Read file. Trailing newline stripped. |
+| `Kirjoita tiedosto` | `Kirj` | `Kirjoita tiedosto "polku" sisalto` | — | Create file. Fails if exists. |
+| `Ylikirjoita tiedosto` | `Ylikirj` | `Ylikirjoita tiedosto "polku" sisalto` | — | Overwrite file. Creates if missing. |
+| `Liitä tiedosto` | `Liit` | `Liitä tiedosto "polku" sisalto` | — | Append to file. Fails if missing. |
+| `Listaa hakemisto` | `Hak` | `Listaa hakemisto "polku"` | list | List directory contents (flat). |
+| `Luo hakemisto` | `Luohak` | `Luo hakemisto "polku"` | — | Create directory (mkdir -p). |
+| `Onko tiedosto` | — | `Onko tiedosto "polku"` | boolean | File exists. |
+| `Onko hakemisto` | — | `Onko hakemisto "polku"` | boolean | Directory exists. |
+
+The modifier words (`tiedosto`, `hakemisto`) are optional — short forms work without them:
+
+```aa
+Mu sisalto: Lue "tiedosto.txt"
+Kirjoita "uusi.txt" "terve"
+Ylikirj "vanha.txt" "uusisisalto"
+Liit "loki.txt" "uusi rivi"
+Hak "/tmp"
+Luohak "kansio"
+```
+
+### Arithmetic
 
 ```aa
 Mu x: 5 + 3
@@ -136,7 +185,16 @@ Mu z: "Moi " + nimi
 
 ## Examples
 
-See the `examples/` folder for complete programs including a guessing game.
+See the `examples/` folder for complete programs:
+
+| File | What it does |
+|---|---|
+| `hello.aa` | Hello world with variables, conditionals, and a loop |
+| `lista.aa` | List operations: create, index, append, iterate |
+| `arvaus.aa` | Number guessing game using Kysy, Jos, loops |
+| `csv.aa` | Parse CSV-style data and compute results |
+| `merkkijono.aa` | String operations: Trim, Isot, Pienet, Pilko, Korvaa |
+| `tiedostot-ja-hakemistot.aa` | File I/O: read, write, list, create directories |
 
 ---
 
@@ -146,7 +204,7 @@ See the `examples/` folder for complete programs including a guessing game.
 go test ./...
 ```
 
-27 golden tests in `testdata/`, plus lexer and interpreter unit tests.
+37 golden tests in `testdata/`, plus lexer and interpreter unit tests.
 
 ---
 

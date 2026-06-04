@@ -1,10 +1,14 @@
-# AA-koodaus — Avainsanat
+# AA-koodaus — Keyword reference
 
 Complete keyword reference. All keywords are case-sensitive, first letter capitalized.
 
+**Syntax notation:** `Muuttuja` / `arvo` / `polku` etc. are placeholders for actual values.
+A trailing `:` starts a block (closed with `Loppu`).
+Modifier words like `tiedosto` / `hakemisto` are optional — commands work with or without them.
+
 ---
 
-## Muuttujat — Variables
+## Variables
 
 | Keyword | Alias | Syntax | Notes |
 |---|---|---|---|
@@ -12,7 +16,7 @@ Complete keyword reference. All keywords are case-sensitive, first letter capita
 
 ---
 
-## Tulostus ja syöte — Output and input
+## Output and input
 
 | Keyword | Alias | Syntax | Notes |
 |---|---|---|---|
@@ -21,7 +25,7 @@ Complete keyword reference. All keywords are case-sensitive, first letter capita
 
 ---
 
-## Ehdot — Conditionals
+## Conditionals
 
 | Keyword | Alias | Syntax | Notes |
 |---|---|---|---|
@@ -29,7 +33,7 @@ Complete keyword reference. All keywords are case-sensitive, first letter capita
 | `Muuten` | — | `Muuten:` | Else. Optional. Inside `Jos` block. |
 | `Loppu` | — | `Loppu` | Closes any block. |
 
-### Vertailuoperaattorit — Comparison operators
+### Comparison operators
 
 | Operator | Meaning |
 |---|---|
@@ -42,7 +46,7 @@ Complete keyword reference. All keywords are case-sensitive, first letter capita
 
 ---
 
-## Silmukat — Loops
+## Loops
 
 | Keyword | Alias | Syntax | Notes |
 |---|---|---|---|
@@ -53,7 +57,7 @@ Complete keyword reference. All keywords are case-sensitive, first letter capita
 
 ---
 
-## Funktiot — Functions
+## Functions
 
 | Keyword | Alias | Syntax | Notes |
 |---|---|---|---|
@@ -63,7 +67,7 @@ Complete keyword reference. All keywords are case-sensitive, first letter capita
 
 ---
 
-## Listat — Lists
+## Lists
 
 | Keyword | Alias | Syntax | Returns | Notes |
 |---|---|---|---|---|
@@ -74,7 +78,7 @@ Complete keyword reference. All keywords are case-sensitive, first letter capita
 
 ---
 
-## Merkkijonot — Strings
+## Strings
 
 | Keyword | Alias | Syntax | Returns |
 |---|---|---|---|
@@ -90,7 +94,7 @@ Interpolation: `{muuttuja}` inside strings.
 
 ---
 
-## Tiedostot — File I/O
+## File I/O
 
 | Keyword | Alias | Syntax | Returns | Notes |
 |---|---|---|---|---|
@@ -105,7 +109,7 @@ Interpolation: `{muuttuja}` inside strings.
 
 ---
 
-## Tyypit — Types
+## Types
 
 | Type | Values | Notes |
 |---|---|---|
