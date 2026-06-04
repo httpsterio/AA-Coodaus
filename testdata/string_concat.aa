@@ -1,0 +1,4 @@
+Mu etu: Aku
+Mu suku: Ankka
+Mu koko: etu + " " + suku
+Sano: {koko}

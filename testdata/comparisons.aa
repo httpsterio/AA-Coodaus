@@ -1,0 +1,14 @@
+Mu x: 5
+Mu y: 3
+Jos x yli y:
+  Sano: x on suurempi
+Loppu
+Jos x alle y:
+  Sano: Tämä ei näy
+Loppu
+Jos x on 5:
+  Sano: x on viisi
+Loppu
+Jos x ei 3:
+  Sano: x ei ole kolme
+Loppu

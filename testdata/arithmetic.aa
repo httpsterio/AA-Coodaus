@@ -1,0 +1,8 @@
+Mu x: 5 + 3
+Mu y: x * 2
+Mu z: y - 4
+Mu w: z / 3
+Sano: {x}
+Sano: {y}
+Sano: {z}
+Sano: {w}

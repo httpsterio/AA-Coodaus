@@ -1,0 +1,5 @@
+Mu luku: 1
+Kunnes luku yli 5:
+  Sano: {luku}
+  Mu luku: luku + 1
+Loppu

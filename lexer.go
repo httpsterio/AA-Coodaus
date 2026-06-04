@@ -138,7 +138,41 @@ func (l *Lexer) ReadRestOfLine() Token {
 	// We want to trim leading/trailing spaces
 	trimmed := trimSpaces(raw)
 
+	// Process escape sequences if this is a quoted string
+	if len(trimmed) >= 2 && trimmed[0] == '"' && trimmed[len(trimmed)-1] == '"' {
+		inner := trimmed[1 : len(trimmed)-1]
+		trimmed = "\"" + processEscapeSequences(inner) + "\""
+	}
+
 	return Token{Type: TOKEN_STRING, Literal: trimmed, Line: l.line}
+}
+
+func processEscapeSequences(s string) string {
+	var result []rune
+	runes := []rune(s)
+	for i := 0; i < len(runes); i++ {
+		if runes[i] == '\\' && i+1 < len(runes) {
+			switch runes[i+1] {
+			case 'n':
+				result = append(result, '\n')
+				i++
+			case 't':
+				result = append(result, '\t')
+				i++
+			case '\\':
+				result = append(result, '\\')
+				i++
+			case '"':
+				result = append(result, '"')
+				i++
+			default:
+				result = append(result, runes[i])
+			}
+		} else {
+			result = append(result, runes[i])
+		}
+	}
+	return string(result)
 }
 
 func trimSpaces(s string) string {

@@ -1,0 +1,8 @@
+Mu x: 5
+Jos x yli 0:
+  Jos x on 5:
+    Sano: Viisi
+  Muuten:
+    Sano: Ei viisi
+  Loppu
+Loppu

@@ -1,0 +1,7 @@
+Mu a: 5
+Jos a yli-on 5:
+  Sano: Viisi tai yli
+Loppu
+Jos a yli-on 4:
+  Sano: Yli neljän
+Loppu

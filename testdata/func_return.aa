@@ -1,0 +1,7 @@
+Teko laske a b:
+  Anna a + b
+Loppu
+
+Mu tulos: Tee laske 3 5
+Sano: {tulos}
+Sano: "Tulos on {tulos}"

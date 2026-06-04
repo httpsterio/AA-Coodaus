@@ -1,0 +1,4 @@
+Mu a: 10
+Mu b: 3
+Mu c: a % b
+Sano: {c}
