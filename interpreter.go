@@ -195,6 +195,14 @@ func (e *Evaluator) evalStatement(stmt Stmt) {
 		e.evalLisaaStmt(s)
 	case *JokaStmt:
 		e.evalJokaStmt(s)
+	case *KirjoitaStmt:
+		e.evalKirjoitaStmt(s)
+	case *YlikirjoitaStmt:
+		e.evalYlikirjoitaStmt(s)
+	case *LiitaStmt:
+		e.evalLiitaStmt(s)
+	case *LuoHakemistoStmt:
+		e.evalLuoHakemistoStmt(s)
 	default:
 		ShowError(stmt.LineNumber(), "Tuntematon lauseketyyppi suorituksessa.")
 	}
@@ -401,6 +409,12 @@ func (e *Evaluator) evalExpr(expr Expr, allowBareString bool) Val {
 		return e.evalIsotExpr(ex)
 	case *PienetExpr:
 		return e.evalPienetExpr(ex)
+	case *LueExpr:
+		return e.evalLueExpr(ex)
+	case *ListaaExpr:
+		return e.evalListaaExpr(ex)
+	case *OnkoExpr:
+		return e.evalOnkoExpr(ex)
 	default:
 		ShowError(expr.LineNumber(), "Tuntematon lauseketyyppi laskennassa.")
 		return nil
@@ -527,6 +541,120 @@ func (e *Evaluator) evalPienetExpr(expr *PienetExpr) Val {
 		ShowError(expr.Line, "Pienet vaatii merkkijonon, saatiin %s.", strVal.Type())
 	}
 	return &StringVal{Value: strings.ToLower(str.Value)}
+}
+
+func (e *Evaluator) evalLueExpr(expr *LueExpr) Val {
+	pathVal := e.evalExpr(expr.Path, false)
+	path, ok := pathVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Lue vaatii tiedostopolun merkkijonona, saatiin %s.", pathVal.Type())
+	}
+	data, err := os.ReadFile(path.Value)
+	if err != nil {
+		ShowError(expr.Line, "Tiedostoa \"%s\" ei voitu lukea: %s", path.Value, err)
+	}
+	content := strings.TrimRight(string(data), "\n\r")
+	return &StringVal{Value: content}
+}
+
+func (e *Evaluator) evalListaaExpr(expr *ListaaExpr) Val {
+	pathVal := e.evalExpr(expr.Path, false)
+	path, ok := pathVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Listaa vaatii hakemistopolun merkkijonona, saatiin %s.", pathVal.Type())
+	}
+	entries, err := os.ReadDir(path.Value)
+	if err != nil {
+		ShowError(expr.Line, "Hakemistoa \"%s\" ei voitu lukea: %s", path.Value, err)
+	}
+	elements := make([]Val, len(entries))
+	for i, entry := range entries {
+		elements[i] = &StringVal{Value: entry.Name()}
+	}
+	return &ListVal{Elements: elements}
+}
+
+func (e *Evaluator) evalOnkoExpr(expr *OnkoExpr) Val {
+	pathVal := e.evalExpr(expr.Path, false)
+	path, ok := pathVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Onko vaatii polun merkkijonona, saatiin %s.", pathVal.Type())
+	}
+	info, err := os.Stat(path.Value)
+	if err != nil {
+		return &BoolVal{Value: false}
+	}
+	if expr.IsFile {
+		return &BoolVal{Value: !info.IsDir()}
+	}
+	return &BoolVal{Value: info.IsDir()}
+}
+
+func (e *Evaluator) evalKirjoitaStmt(stmt *KirjoitaStmt) {
+	pathVal := e.evalExpr(stmt.Path, false)
+	contentVal := e.evalExpr(stmt.Content, false)
+	path, ok := pathVal.(*StringVal)
+	if !ok {
+		ShowError(stmt.Line, "Kirjoita vaatii tiedostopolun merkkijonona, saatiin %s.", pathVal.Type())
+	}
+	content, ok := contentVal.(*StringVal)
+	if !ok {
+		ShowError(stmt.Line, "Kirjoita vaatii sisällön merkkijonona, saatiin %s.", contentVal.Type())
+	}
+	if _, err := os.Stat(path.Value); err == nil {
+		ShowError(stmt.Line, "Tiedosto \"%s\" on jo olemassa. Käytä Ylikirjoita jos haluat korvata.", path.Value)
+	}
+	if err := os.WriteFile(path.Value, []byte(content.Value), 0644); err != nil {
+		ShowError(stmt.Line, "Tiedostoon \"%s\" kirjoittaminen epäonnistui: %s", path.Value, err)
+	}
+}
+
+func (e *Evaluator) evalYlikirjoitaStmt(stmt *YlikirjoitaStmt) {
+	pathVal := e.evalExpr(stmt.Path, false)
+	contentVal := e.evalExpr(stmt.Content, false)
+	path, ok := pathVal.(*StringVal)
+	if !ok {
+		ShowError(stmt.Line, "Ylikirjoita vaatii tiedostopolun merkkijonona, saatiin %s.", pathVal.Type())
+	}
+	content, ok := contentVal.(*StringVal)
+	if !ok {
+		ShowError(stmt.Line, "Ylikirjoita vaatii sisällön merkkijonona, saatiin %s.", contentVal.Type())
+	}
+	if err := os.WriteFile(path.Value, []byte(content.Value), 0644); err != nil {
+		ShowError(stmt.Line, "Tiedostoon \"%s\" kirjoittaminen epäonnistui: %s", path.Value, err)
+	}
+}
+
+func (e *Evaluator) evalLiitaStmt(stmt *LiitaStmt) {
+	pathVal := e.evalExpr(stmt.Path, false)
+	contentVal := e.evalExpr(stmt.Content, false)
+	path, ok := pathVal.(*StringVal)
+	if !ok {
+		ShowError(stmt.Line, "Liitä vaatii tiedostopolun merkkijonona, saatiin %s.", pathVal.Type())
+	}
+	content, ok := contentVal.(*StringVal)
+	if !ok {
+		ShowError(stmt.Line, "Liitä vaatii sisällön merkkijonona, saatiin %s.", contentVal.Type())
+	}
+	f, err := os.OpenFile(path.Value, os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		ShowError(stmt.Line, "Tiedostoon \"%s\" liittäminen epäonnistui: %s", path.Value, err)
+	}
+	defer f.Close()
+	if _, err := f.WriteString(content.Value); err != nil {
+		ShowError(stmt.Line, "Tiedostoon \"%s\" kirjoittaminen epäonnistui: %s", path.Value, err)
+	}
+}
+
+func (e *Evaluator) evalLuoHakemistoStmt(stmt *LuoHakemistoStmt) {
+	pathVal := e.evalExpr(stmt.Path, false)
+	path, ok := pathVal.(*StringVal)
+	if !ok {
+		ShowError(stmt.Line, "Luo-hakemisto vaatii polun merkkijonona, saatiin %s.", pathVal.Type())
+	}
+	if err := os.MkdirAll(path.Value, 0755); err != nil {
+		ShowError(stmt.Line, "Hakemiston \"%s\" luominen epäonnistui: %s", path.Value, err)
+	}
 }
 
 func (e *Evaluator) evalTeeExpr(expr *TeeExpr) (result Val) {

@@ -337,6 +337,17 @@ const (
 	TOKEN_ISOT     TokenType = "Isot"
 	TOKEN_PIENET   TokenType = "Pienet"
 
+	// File I/O (Milestone 2)
+	TOKEN_LUE        TokenType = "Lue"
+	TOKEN_KIRJOITA   TokenType = "Kirjoita"
+	TOKEN_YLIKIRJOITA TokenType = "Ylikirjoita"
+	TOKEN_LIITA      TokenType = "Liitä"
+	TOKEN_LISTAA     TokenType = "Listaa"
+	TOKEN_HAK        TokenType = "Hak"
+	TOKEN_LUO        TokenType = "Luo"
+	TOKEN_LUOHAK     TokenType = "Luohak"
+	TOKEN_ONKO       TokenType = "Onko"
+
 	// Operators
 	TOKEN_PLUS    TokenType = "+"
 	TOKEN_MINUS   TokenType = "-"
@@ -379,6 +390,19 @@ var keywords = map[string]TokenType{
 	"Trim":     TOKEN_TRIMMAA,
 	"Isot":     TOKEN_ISOT,
 	"Pienet":   TOKEN_PIENET,
+
+	"Lue":       TOKEN_LUE,
+	"Kirjoita":  TOKEN_KIRJOITA,
+	"Kirj":      TOKEN_KIRJOITA,
+	"Ylikirjoita": TOKEN_YLIKIRJOITA,
+	"Ylikirj":   TOKEN_YLIKIRJOITA,
+	"Liitä":     TOKEN_LIITA,
+	"Liit":      TOKEN_LIITA,
+	"Listaa":    TOKEN_LISTAA,
+	"Hak":       TOKEN_HAK,
+	"Luo":       TOKEN_LUO,
+	"Luohak":    TOKEN_LUOHAK,
+	"Onko":      TOKEN_ONKO,
 	"on":       TOKEN_ON,
 	"ei":       TOKEN_EI,
 	"yli":      TOKEN_YLI,

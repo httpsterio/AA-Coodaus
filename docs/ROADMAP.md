@@ -17,19 +17,23 @@
 - [x] README
 - [x] .gitignore, Makefile
 - [x] examples/ folder
-- [ ] GitHub release with cross-compiled binaries
+- [x] GitHub release with cross-compiled binaries
 
 ---
 
-## Milestone 2 — File I/O
+## Milestone 2 — File I/O ✅
 
-- [ ] `Lue tiedosto: polku` — read file to string
-- [ ] `Kirjoita tiedosto: polku sisalto` — write string to file
-- [ ] `Lisää tiedosto: polku sisalto` — append to file
-- [ ] `Jos Onko tiedosto: polku` — file exists check
-- [ ] `Listaa hakemisto: polku` — returns list of filenames
-- [ ] Cross-platform path handling (via Go stdlib)
-- [ ] Tests for all file operations
+- [x] `Lue` / `Lue tiedosto: polku` — read file to string
+- [x] `Kirjoita` / `Kirjoita tiedosto: polku sisalto` — write new file (errors if exists)
+- [x] `Ylikirjoita` / `Ylikirj` / `Ylikirjoita tiedosto: polku sisalto` — overwrite existing file
+- [x] `Liitä` / `Liit` / `Liitä tiedosto: polku sisalto` — append to file
+- [x] `Onko tiedosto: polku` / `Onko hakemisto: polku` — existence and type check
+- [x] `Listaa hakemisto: polku` — returns list of filenames
+- [x] `Hak: polku` — shorthand alias for `Listaa hakemisto`
+- [x] `Luo hakemisto: polku` / `Luohak: polku` — create directory (mkdir -p)
+- [x] Cross-platform path handling (via Go stdlib)
+- [x] Tests for all file operations (13 unit tests with t.TempDir())
+- [x] Shorthand/alias forms without modifier word (`Kirjoita`, `Ylikirjoita`, `Liitä` without `tiedosto`)
 
 ---
 

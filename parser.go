@@ -186,6 +186,61 @@ type PienetExpr struct {
 
 func (e *PienetExpr) exprNode() {}
 
+// File I/O expression types (Milestone 2)
+type LueExpr struct {
+	astNode
+	Path Expr
+}
+
+func (e *LueExpr) exprNode() {}
+
+type ListaaExpr struct {
+	astNode
+	Path Expr
+}
+
+func (e *ListaaExpr) exprNode() {}
+
+type OnkoExpr struct {
+	astNode
+	Path   Expr
+	IsFile bool
+}
+
+func (e *OnkoExpr) exprNode() {}
+
+// File I/O statement types (Milestone 2)
+type KirjoitaStmt struct {
+	astNode
+	Path    Expr
+	Content Expr
+}
+
+func (s *KirjoitaStmt) stmtNode() {}
+
+type YlikirjoitaStmt struct {
+	astNode
+	Path    Expr
+	Content Expr
+}
+
+func (s *YlikirjoitaStmt) stmtNode() {}
+
+type LiitaStmt struct {
+	astNode
+	Path    Expr
+	Content Expr
+}
+
+func (s *LiitaStmt) stmtNode() {}
+
+type LuoHakemistoStmt struct {
+	astNode
+	Path Expr
+}
+
+func (s *LuoHakemistoStmt) stmtNode() {}
+
 // Statements
 
 type VarDeclStmt struct {
@@ -409,6 +464,16 @@ func (p *Parser) parseStatement() Stmt {
 		return stmt
 	case TOKEN_JOKA:
 		return p.parseJokaStmt()
+	case TOKEN_KIRJOITA:
+		return p.parseKirjoitaStmt()
+	case TOKEN_YLIKIRJOITA:
+		return p.parseYlikirjoitaStmt()
+	case TOKEN_LIITA:
+		return p.parseLiitaStmt()
+	case TOKEN_LUO:
+		return p.parseLuoHakemistoStmt()
+	case TOKEN_LUOHAK:
+		return p.parseLuohakStmt()
 	default:
 		ShowError(tok.Line, "Tuntematon lauseke tai komento: %s", tok.Literal)
 		return nil
@@ -745,6 +810,14 @@ func (p *Parser) findPrefixHandler(t TokenType) func() Expr {
 		return p.parseIsotExpr
 	case TOKEN_PIENET:
 		return p.parsePienetExpr
+	case TOKEN_LUE:
+		return p.parseLueExpr
+	case TOKEN_LISTAA:
+		return p.parseListaaExpr
+	case TOKEN_HAK:
+		return p.parseListaaExpr
+	case TOKEN_ONKO:
+		return p.parseOnkoExpr
 	}
 	return nil
 }
@@ -943,9 +1016,125 @@ func (p *Parser) parsePienetExpr() Expr {
 	}
 }
 
+func (p *Parser) parseLueExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Lue
+	if p.curTokenIs(TOKEN_IDENT) && p.curToken.Literal == "tiedosto" {
+		p.nextToken() // discard modifier
+	}
+	path := p.parseExpression(LOWEST)
+	return &LueExpr{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+	}
+}
+
+func (p *Parser) parseListaaExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Listaa or Hak
+	if p.curTokenIs(TOKEN_IDENT) && p.curToken.Literal == "hakemisto" {
+		p.nextToken() // discard modifier
+	}
+	path := p.parseExpression(LOWEST)
+	return &ListaaExpr{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+	}
+}
+
+func (p *Parser) parseOnkoExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Onko
+	if !p.curTokenIs(TOKEN_IDENT) || (p.curToken.Literal != "tiedosto" && p.curToken.Literal != "hakemisto") {
+		ShowError(tok.Line, "Onko-komennon jälkeen tarvitaan 'tiedosto' tai 'hakemisto'.")
+	}
+	isFile := p.curToken.Literal == "tiedosto"
+	p.nextToken() // discard modifier
+	path := p.parseExpression(LOWEST)
+	return &OnkoExpr{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+		IsFile:  isFile,
+	}
+}
+
+func (p *Parser) parseKirjoitaStmt() Stmt {
+	tok := p.curToken
+	p.nextToken() // consume Kirjoita/Kirj
+	if p.curTokenIs(TOKEN_IDENT) && p.curToken.Literal == "tiedosto" {
+		p.nextToken()
+	}
+	path := p.parseExpression(LOWEST)
+	content := p.parseExpression(LOWEST)
+	p.consumeStatementTerminator()
+	return &KirjoitaStmt{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+		Content: content,
+	}
+}
+
+func (p *Parser) parseYlikirjoitaStmt() Stmt {
+	tok := p.curToken
+	p.nextToken() // consume Ylikirjoita/Ylikirj
+	if p.curTokenIs(TOKEN_IDENT) && p.curToken.Literal == "tiedosto" {
+		p.nextToken()
+	}
+	path := p.parseExpression(LOWEST)
+	content := p.parseExpression(LOWEST)
+	p.consumeStatementTerminator()
+	return &YlikirjoitaStmt{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+		Content: content,
+	}
+}
+
+func (p *Parser) parseLiitaStmt() Stmt {
+	tok := p.curToken
+	p.nextToken() // consume Liitä/Liit
+	if p.curTokenIs(TOKEN_IDENT) && p.curToken.Literal == "tiedosto" {
+		p.nextToken()
+	}
+	path := p.parseExpression(LOWEST)
+	content := p.parseExpression(LOWEST)
+	p.consumeStatementTerminator()
+	return &LiitaStmt{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+		Content: content,
+	}
+}
+
+func (p *Parser) parseLuoHakemistoStmt() Stmt {
+	tok := p.curToken
+	p.nextToken() // consume Luo
+	if !p.curTokenIs(TOKEN_IDENT) || p.curToken.Literal != "hakemisto" {
+		ShowError(tok.Line, "Luo-komennon jälkeen tarvitaan 'hakemisto'.")
+	}
+	p.nextToken() // discard modifier
+	path := p.parseExpression(LOWEST)
+	p.consumeStatementTerminator()
+	return &LuoHakemistoStmt{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+	}
+}
+
+func (p *Parser) parseLuohakStmt() Stmt {
+	tok := p.curToken
+	p.nextToken() // consume Luohak
+	path := p.parseExpression(LOWEST)
+	p.consumeStatementTerminator()
+	return &LuoHakemistoStmt{
+		astNode: astNode{Line: tok.Line},
+		Path:    path,
+	}
+}
+
 func (p *Parser) canStartExpression(tok Token) bool {
 	switch tok.Type {
-	case TOKEN_IDENT, TOKEN_NUMBER, TOKEN_STRING, TOKEN_LBRACKET, TOKEN_KYLLA, TOKEN_EI, TOKEN_PITUUS, TOKEN_TEE, TOKEN_MINUS, TOKEN_PILKO, TOKEN_KORVAA, TOKEN_SISALTAA, TOKEN_TRIMMAA, TOKEN_ISOT, TOKEN_PIENET:
+	case TOKEN_IDENT, TOKEN_NUMBER, TOKEN_STRING, TOKEN_LBRACKET, TOKEN_KYLLA, TOKEN_EI, TOKEN_PITUUS, TOKEN_TEE, TOKEN_MINUS, TOKEN_PILKO, TOKEN_KORVAA, TOKEN_SISALTAA, TOKEN_TRIMMAA, TOKEN_ISOT, TOKEN_PIENET, TOKEN_LUE, TOKEN_LISTAA, TOKEN_HAK, TOKEN_ONKO:
 		return true
 	}
 	return false

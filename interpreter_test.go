@@ -760,3 +760,210 @@ Sano: {iso}`)
 		t.Errorf("got %q, want %q", out, "ÄÄKKÖSET\n")
 	}
 }
+
+func TestLueTiedosto(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/testi.txt"
+	os.WriteFile(path, []byte("moi maailma\n"), 0644)
+	src := "Mu s: Lue tiedosto \"" + path + "\"\nSano: \"{s}\""
+	out := runProgram(t, src)
+	if out != "moi maailma\n" {
+		t.Errorf("got %q, want %q", out, "moi maailma\n")
+	}
+}
+
+func TestLueTiedostoWithoutModifier(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/testi2.txt"
+	os.WriteFile(path, []byte("hei vaan\n"), 0644)
+	src := "Mu s: Lue \"" + path + "\"\nSano: \"{s}\""
+	out := runProgram(t, src)
+	if out != "hei vaan\n" {
+		t.Errorf("got %q, want %q", out, "hei vaan\n")
+	}
+}
+
+func TestListaaHakemisto(t *testing.T) {
+	dir := t.TempDir()
+	os.WriteFile(dir+"/a.txt", []byte(""), 0644)
+	os.WriteFile(dir+"/b.txt", []byte(""), 0644)
+	src := "Mu tiedot: Listaa hakemisto \"" + dir + "\"\nMu lkm: Pituus tiedot\nSano: \"{lkm}\""
+	out := runProgram(t, src)
+	if out != "2\n" {
+		t.Errorf("got %q, want %q", out, "2\n")
+	}
+}
+
+func TestListaaHakemistoHakAlias(t *testing.T) {
+	dir := t.TempDir()
+	os.WriteFile(dir+"/x.txt", []byte(""), 0644)
+	src := "Mu t: Hak \"" + dir + "\"\nMu lkm: Pituus t\nSano: \"{lkm}\""
+	out := runProgram(t, src)
+	if out != "1\n" {
+		t.Errorf("got %q, want %q", out, "1\n")
+	}
+}
+
+func TestOnkoTiedostoTrue(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/onko.txt"
+	os.WriteFile(path, []byte(""), 0644)
+	src := "Mu onko: Onko tiedosto \"" + path + "\"\nSano: \"{onko}\""
+	out := runProgram(t, src)
+	if out != "kyllä\n" {
+		t.Errorf("got %q, want %q", out, "kyllä\n")
+	}
+}
+
+func TestOnkoTiedostoFalse(t *testing.T) {
+	dir := t.TempDir()
+	src := "Mu onko: Onko tiedosto \"" + dir + "/nonexistent.txt\"\nSano: \"{onko}\""
+	out := runProgram(t, src)
+	if out != "ei\n" {
+		t.Errorf("got %q, want %q", out, "ei\n")
+	}
+}
+
+func TestOnkoHakemistoTrue(t *testing.T) {
+	dir := t.TempDir()
+	src := "Mu onko: Onko hakemisto \"" + dir + "\"\nSano: \"{onko}\""
+	out := runProgram(t, src)
+	if out != "kyllä\n" {
+		t.Errorf("got %q, want %q", out, "kyllä\n")
+	}
+}
+
+func TestKirjoitaTiedosto(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/uusi.txt"
+	src := "Kirjoita tiedosto \"" + path + "\" \"hei\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "hei" {
+		t.Errorf("got %q, want %q", string(data), "hei")
+	}
+}
+
+func TestYlikirjoitaTiedosto(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/korvataan.txt"
+	os.WriteFile(path, []byte("vanha"), 0644)
+	src := "Ylikirjoita tiedosto \"" + path + "\" \"uusi\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "uusi" {
+		t.Errorf("got %q, want %q", string(data), "uusi")
+	}
+}
+
+func TestYlikirjAlias(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/ylikirj.txt"
+	src := "Ylikirj tiedosto \"" + path + "\" \"testi\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "testi" {
+		t.Errorf("got %q, want %q", string(data), "testi")
+	}
+}
+
+func TestLiitaTiedosto(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/liitettava.txt"
+	os.WriteFile(path, []byte("eka"), 0644)
+	src := "Liitä tiedosto \"" + path + "\" \"toka\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "ekatoka" {
+		t.Errorf("got %q, want %q", string(data), "ekatoka")
+	}
+}
+
+func TestLiitAliasWithNewline(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/liit.txt"
+	os.WriteFile(path, []byte("rivi1\n"), 0644)
+	src := "Liit tiedosto \"" + path + "\" \"rivi2\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "rivi1\nrivi2" {
+		t.Errorf("got %q, want %q", string(data), "rivi1\nrivi2")
+	}
+}
+
+func TestLuoHakemisto(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/uusi_kansio"
+	src := "Luo hakemisto \"" + path + "\""
+	runProgram(t, src)
+	info, err := os.Stat(path)
+	if err != nil || !info.IsDir() {
+		t.Errorf("directory should exist: %v", err)
+	}
+}
+
+func TestLuohakAlias(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/toinen_kansio"
+	src := "Luohak \"" + path + "\""
+	runProgram(t, src)
+	info, err := os.Stat(path)
+	if err != nil || !info.IsDir() {
+		t.Errorf("directory should exist: %v", err)
+	}
+}
+
+func TestListaaEmptyDir(t *testing.T) {
+	dir := t.TempDir()
+	src := "Mu t: Listaa hakemisto \"" + dir + "\"\nMu lkm: Pituus t\nSano: \"{lkm}\""
+	out := runProgram(t, src)
+	if out != "0\n" {
+		t.Errorf("got %q, want %q", out, "0\n")
+	}
+}
+
+func TestKirjoitaWithoutModifier(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/ilman_modifier.txt"
+	src := "Kirjoita \"" + path + "\" \"testi\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "testi" {
+		t.Errorf("got %q, want %q", string(data), "testi")
+	}
+}
+
+func TestYlikirjoitaWithoutModifier(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/ylikirj_ilman.txt"
+	os.WriteFile(path, []byte("vanha"), 0644)
+	src := "Ylikirjoita \"" + path + "\" \"uusi\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "uusi" {
+		t.Errorf("got %q, want %q", string(data), "uusi")
+	}
+}
+
+func TestLiitaWithoutModifier(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/liita_ilman.txt"
+	os.WriteFile(path, []byte("alku"), 0644)
+	src := "Liitä \"" + path + "\" \"loppu\""
+	runProgram(t, src)
+	data, _ := os.ReadFile(path)
+	if string(data) != "alkuloppu" {
+		t.Errorf("got %q, want %q", string(data), "alkuloppu")
+	}
+}
+
+func TestLuoHakemistoNested(t *testing.T) {
+	dir := t.TempDir()
+	path := dir + "/a/b/c"
+	src := "Luo hakemisto \"" + path + "\""
+	runProgram(t, src)
+	info, err := os.Stat(path)
+	if err != nil || !info.IsDir() {
+		t.Errorf("nested directory should exist: %v", err)
+	}
+}

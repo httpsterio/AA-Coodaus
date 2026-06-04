@@ -1,0 +1,39 @@
+-- Tiedostojen ja hakemistojen luku ja kirjoitus
+
+-- Luo hakemisto
+Luo hakemisto "testi-output"
+
+-- Tarkista että hakemisto on olemassa
+Jos Onko hakemisto "testi-output":
+  Sano: hakemisto ok
+Loppu
+
+-- Kirjoita uusi tiedosto
+Kirjoita tiedosto "testi-output/testi.txt" "Moi maailma"
+
+-- Tarkista että tiedosto on olemassa
+Jos Onko tiedosto "testi-output/testi.txt":
+  Sano: tiedosto ok
+Loppu
+
+-- Lue tiedosto takaisin
+Mu sisalto: Lue tiedosto "testi-output/testi.txt"
+Sano: {sisalto}
+
+-- Liitä rivi
+Liitä tiedosto "testi-output/testi.txt" "\nToinen rivi"
+Mu sisalto2: Lue tiedosto "testi-output/testi.txt"
+Sano: {sisalto2}
+
+-- Ylikirjoita
+Ylikirjoita tiedosto "testi-output/testi.txt" "Korvattu sisältö"
+Mu sisalto3: Lue tiedosto "testi-output/testi.txt"
+Sano: {sisalto3}
+
+-- Listaa hakemisto
+Mu tiedostot: Listaa hakemisto "testi-output"
+Joka tiedostot t:
+  Sano: {t}
+Loppu
+
+Sano: valmis
