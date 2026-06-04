@@ -140,6 +140,52 @@ type TeeExpr struct {
 
 func (e *TeeExpr) exprNode() {}
 
+type PilkoExpr struct {
+	astNode
+	Str Expr
+	Sep Expr
+}
+
+func (e *PilkoExpr) exprNode() {}
+
+type KorvaaExpr struct {
+	astNode
+	Str Expr
+	Old Expr
+	New Expr
+}
+
+func (e *KorvaaExpr) exprNode() {}
+
+type SisaltaaExpr struct {
+	astNode
+	Str Expr
+	Sub Expr
+}
+
+func (e *SisaltaaExpr) exprNode() {}
+
+type TrimmaaExpr struct {
+	astNode
+	Str Expr
+}
+
+func (e *TrimmaaExpr) exprNode() {}
+
+type IsotExpr struct {
+	astNode
+	Str Expr
+}
+
+func (e *IsotExpr) exprNode() {}
+
+type PienetExpr struct {
+	astNode
+	Str Expr
+}
+
+func (e *PienetExpr) exprNode() {}
+
 // Statements
 
 type VarDeclStmt struct {
@@ -686,8 +732,19 @@ func (p *Parser) findPrefixHandler(t TokenType) func() Expr {
 	case TOKEN_TEE:
 		return p.parseTeeExpr
 	case TOKEN_MINUS:
-		// support unary minus
 		return p.parsePrefixMinusExpr
+	case TOKEN_PILKO:
+		return p.parsePilkoExpr
+	case TOKEN_KORVAA:
+		return p.parseKorvaaExpr
+	case TOKEN_SISALTAA:
+		return p.parseSisaltaaExpr
+	case TOKEN_TRIMMAA:
+		return p.parseTrimmaaExpr
+	case TOKEN_ISOT:
+		return p.parseIsotExpr
+	case TOKEN_PIENET:
+		return p.parsePienetExpr
 	}
 	return nil
 }
@@ -818,9 +875,77 @@ func (p *Parser) parsePituusExpr() Expr {
 	}
 }
 
+func (p *Parser) parsePilkoExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Pilko/Pilk
+	str := p.parseExpression(LOWEST)
+	sep := p.parseExpression(LOWEST)
+	return &PilkoExpr{
+		astNode: astNode{Line: tok.Line},
+		Str:     str,
+		Sep:     sep,
+	}
+}
+
+func (p *Parser) parseKorvaaExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Korvaa/Korv
+	str := p.parseExpression(LOWEST)
+	old := p.parseExpression(LOWEST)
+	newExpr := p.parseExpression(LOWEST)
+	return &KorvaaExpr{
+		astNode: astNode{Line: tok.Line},
+		Str:     str,
+		Old:     old,
+		New:     newExpr,
+	}
+}
+
+func (p *Parser) parseSisaltaaExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Sisaltaa/Sis
+	str := p.parseExpression(LOWEST)
+	sub := p.parseExpression(LOWEST)
+	return &SisaltaaExpr{
+		astNode: astNode{Line: tok.Line},
+		Str:     str,
+		Sub:     sub,
+	}
+}
+
+func (p *Parser) parseTrimmaaExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Trimmaa/Trim
+	str := p.parseExpression(PRODUCT)
+	return &TrimmaaExpr{
+		astNode: astNode{Line: tok.Line},
+		Str:     str,
+	}
+}
+
+func (p *Parser) parseIsotExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Isot
+	str := p.parseExpression(PRODUCT)
+	return &IsotExpr{
+		astNode: astNode{Line: tok.Line},
+		Str:     str,
+	}
+}
+
+func (p *Parser) parsePienetExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Pienet
+	str := p.parseExpression(PRODUCT)
+	return &PienetExpr{
+		astNode: astNode{Line: tok.Line},
+		Str:     str,
+	}
+}
+
 func (p *Parser) canStartExpression(tok Token) bool {
 	switch tok.Type {
-	case TOKEN_IDENT, TOKEN_NUMBER, TOKEN_STRING, TOKEN_LBRACKET, TOKEN_KYLLA, TOKEN_EI, TOKEN_PITUUS, TOKEN_TEE, TOKEN_MINUS:
+	case TOKEN_IDENT, TOKEN_NUMBER, TOKEN_STRING, TOKEN_LBRACKET, TOKEN_KYLLA, TOKEN_EI, TOKEN_PITUUS, TOKEN_TEE, TOKEN_MINUS, TOKEN_PILKO, TOKEN_KORVAA, TOKEN_SISALTAA, TOKEN_TRIMMAA, TOKEN_ISOT, TOKEN_PIENET:
 		return true
 	}
 	return false

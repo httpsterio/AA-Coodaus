@@ -389,6 +389,18 @@ func (e *Evaluator) evalExpr(expr Expr, allowBareString bool) Val {
 		return e.evalBinaryExpr(ex)
 	case *TeeExpr:
 		return e.evalTeeExpr(ex)
+	case *PilkoExpr:
+		return e.evalPilkoExpr(ex)
+	case *KorvaaExpr:
+		return e.evalKorvaaExpr(ex)
+	case *SisaltaaExpr:
+		return e.evalSisaltaaExpr(ex)
+	case *TrimmaaExpr:
+		return e.evalTrimmaaExpr(ex)
+	case *IsotExpr:
+		return e.evalIsotExpr(ex)
+	case *PienetExpr:
+		return e.evalPienetExpr(ex)
 	default:
 		ShowError(expr.LineNumber(), "Tuntematon lauseketyyppi laskennassa.")
 		return nil
@@ -430,6 +442,91 @@ func (e *Evaluator) evalPituusExpr(expr *PituusExpr) Val {
 		ShowError(expr.Line, "Pituus-komento vaatii listan tai merkkijonon, saatiin %s.", val.Type())
 		return nil
 	}
+}
+
+func (e *Evaluator) evalPilkoExpr(expr *PilkoExpr) Val {
+	strVal := e.evalExpr(expr.Str, false)
+	sepVal := e.evalExpr(expr.Sep, false)
+
+	str, ok := strVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Pilko vaatii merkkijonon, saatiin %s.", strVal.Type())
+	}
+	sep, ok := sepVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Pilko vaatii erottimen merkkijonona, saatiin %s.", sepVal.Type())
+	}
+
+	parts := strings.Split(str.Value, sep.Value)
+	elements := make([]Val, len(parts))
+	for i, p := range parts {
+		elements[i] = &StringVal{Value: p}
+	}
+	return &ListVal{Elements: elements}
+}
+
+func (e *Evaluator) evalKorvaaExpr(expr *KorvaaExpr) Val {
+	strVal := e.evalExpr(expr.Str, false)
+	oldVal := e.evalExpr(expr.Old, false)
+	newVal := e.evalExpr(expr.New, false)
+
+	str, ok := strVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Korvaa vaatii merkkijonon, saatiin %s.", strVal.Type())
+	}
+	old, ok := oldVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Korvaa vaatii korvattavan merkkijonona, saatiin %s.", oldVal.Type())
+	}
+	repl, ok := newVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Korvaa vaatii korvaavan merkkijonona, saatiin %s.", newVal.Type())
+	}
+
+	return &StringVal{Value: strings.ReplaceAll(str.Value, old.Value, repl.Value)}
+}
+
+func (e *Evaluator) evalSisaltaaExpr(expr *SisaltaaExpr) Val {
+	strVal := e.evalExpr(expr.Str, false)
+	subVal := e.evalExpr(expr.Sub, false)
+
+	str, ok := strVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Sisaltaa vaatii merkkijonon, saatiin %s.", strVal.Type())
+	}
+	sub, ok := subVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Sisaltaa vaatii osamerkkijonon merkkijonona, saatiin %s.", subVal.Type())
+	}
+
+	return &BoolVal{Value: strings.Contains(str.Value, sub.Value)}
+}
+
+func (e *Evaluator) evalTrimmaaExpr(expr *TrimmaaExpr) Val {
+	strVal := e.evalExpr(expr.Str, false)
+	str, ok := strVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Trimmaa vaatii merkkijonon, saatiin %s.", strVal.Type())
+	}
+	return &StringVal{Value: strings.TrimSpace(str.Value)}
+}
+
+func (e *Evaluator) evalIsotExpr(expr *IsotExpr) Val {
+	strVal := e.evalExpr(expr.Str, false)
+	str, ok := strVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Isot vaatii merkkijonon, saatiin %s.", strVal.Type())
+	}
+	return &StringVal{Value: strings.ToUpper(str.Value)}
+}
+
+func (e *Evaluator) evalPienetExpr(expr *PienetExpr) Val {
+	strVal := e.evalExpr(expr.Str, false)
+	str, ok := strVal.(*StringVal)
+	if !ok {
+		ShowError(expr.Line, "Pienet vaatii merkkijonon, saatiin %s.", strVal.Type())
+	}
+	return &StringVal{Value: strings.ToLower(str.Value)}
 }
 
 func (e *Evaluator) evalTeeExpr(expr *TeeExpr) (result Val) {

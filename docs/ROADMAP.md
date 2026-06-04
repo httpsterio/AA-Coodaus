@@ -33,17 +33,17 @@
 
 ---
 
-## Milestone 3 — String operations
+## Milestone 3 — String operations ✅
 
 - [x] `Pituus` for strings
-- [ ] `Pilko` / `Pilk` — split string by separator → list
-- [ ] `Korvaa` / `Korv` — replace substring → string
-- [ ] `Sisaltaa` / `Sis` — contains substring → boolean
-- [ ] `Trimmaa` / `Trim` — trim whitespace → string
-- [ ] `Isot` — uppercase → string
-- [ ] `Pienet` — lowercase → string
+- [x] `Pilko` / `Pilk` — split string by separator → list
+- [x] `Korvaa` / `Korv` — replace substring → string
+- [x] `Sisaltaa` / `Sis` — contains substring → boolean
+- [x] `Trimmaa` / `Trim` — trim whitespace → string
+- [x] `Isot` — uppercase → string
+- [x] `Pienet` — lowercase → string
 - [ ] Multiline string literal or heredoc syntax (TBD)
-- [ ] Tests
+- [x] Tests
 
 ---
 

@@ -1,0 +1,15 @@
+-- Yksinkertainen CSV-käsittely
+-- Parsii nimiä ja pisteitä, tulostaa voittajat
+
+Mu data: "Aku,42|Iines,87|Hannu,15|Tupu,91|Hupu,63|Lupu,77"
+
+Mu rivit: Pilko data "|"
+
+Joka rivit rivi:
+  Mu osat: Pilko rivi ","
+  Mu nimi: osat[1]
+  Mu pisteet: osat[2]
+  Jos pisteet yli 70:
+    Sano: "{nimi} läpäisi pisteillä {pisteet}"
+  Loppu
+Loppu

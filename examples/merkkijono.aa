@@ -1,0 +1,33 @@
+-- Merkkijono-operaatiot esimerkki
+
+Mu nimi: "  Aku Ankka  "
+Mu puhdas: Trim nimi
+Sano: {puhdas}
+
+Mu iso: Isot puhdas
+Sano: {iso}
+
+Mu pieni: Pienet puhdas
+Sano: {pieni}
+
+-- Pilko ja käy läpi
+Mu sanat: Pilko "Ankkalinna,Haapaniemi,Hanhivaara" ","
+Joka sanat paikka:
+  Sano: {paikka}
+Loppu
+
+-- Sisaltaa tarkistus
+Mu loytyy: Sis puhdas "Aku"
+Jos loytyy on kyllä:
+  Sano: Nimi sisältää Aku
+Muuten:
+  Sano: Ei löydy
+Loppu
+
+-- Korvaa
+Mu uusi: Korv puhdas "Aku" "Iines"
+Sano: {uusi}
+
+-- Pituus merkkijonolle
+Mu n: Pituus puhdas
+Sano: {n}

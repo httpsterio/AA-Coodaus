@@ -329,6 +329,14 @@ const (
 	TOKEN_PITUUS  TokenType = "Pituus"
 	TOKEN_JOKA    TokenType = "Joka"
 
+	// String operations (Milestone 3)
+	TOKEN_PILKO    TokenType = "Pilko"
+	TOKEN_KORVAA   TokenType = "Korvaa"
+	TOKEN_SISALTAA TokenType = "Sisaltaa"
+	TOKEN_TRIMMAA  TokenType = "Trimmaa"
+	TOKEN_ISOT     TokenType = "Isot"
+	TOKEN_PIENET   TokenType = "Pienet"
+
 	// Operators
 	TOKEN_PLUS    TokenType = "+"
 	TOKEN_MINUS   TokenType = "-"
@@ -360,13 +368,24 @@ var keywords = map[string]TokenType{
 	"Lisää":   TOKEN_LISAA,
 	"Pituus":  TOKEN_PITUUS,
 	"Joka":    TOKEN_JOKA,
-	"on":      TOKEN_ON,
-	"ei":      TOKEN_EI,
-	"yli":     TOKEN_YLI,
-	"alle":    TOKEN_ALLE,
-	"yli-on":  TOKEN_YLI_ON,
-	"alle-on": TOKEN_ALLE_ON,
-	"kyllä":   TOKEN_KYLLA,
+
+	"Pilko":    TOKEN_PILKO,
+	"Pilk":     TOKEN_PILKO,
+	"Korvaa":   TOKEN_KORVAA,
+	"Korv":     TOKEN_KORVAA,
+	"Sisaltaa": TOKEN_SISALTAA,
+	"Sis":      TOKEN_SISALTAA,
+	"Trimmaa":  TOKEN_TRIMMAA,
+	"Trim":     TOKEN_TRIMMAA,
+	"Isot":     TOKEN_ISOT,
+	"Pienet":   TOKEN_PIENET,
+	"on":       TOKEN_ON,
+	"ei":       TOKEN_EI,
+	"yli":      TOKEN_YLI,
+	"alle":     TOKEN_ALLE,
+	"yli-on":   TOKEN_YLI_ON,
+	"alle-on":  TOKEN_ALLE_ON,
+	"kyllä":    TOKEN_KYLLA,
 }
 
 func LookupIdent(ident string) TokenType {

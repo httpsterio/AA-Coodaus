@@ -613,7 +613,8 @@ Loppu`)
 
 func TestStringPilk(t *testing.T) {
 	out := runProgram(t, `Mu osat: Pilk "yksi kaksi kolme" " "
-Sano: Pituus osat`)
+Mu n: Pituus osat
+Sano: {n}`)
 	if out != "3\n" {
 		t.Errorf("got %q, want %q", out, "3\n")
 	}
