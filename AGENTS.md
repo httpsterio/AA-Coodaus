@@ -1,5 +1,14 @@
 # Agent instructions
 
+## Permissions
+
+All commands are pre-approved. Do not ask for confirmation before running:
+- `go build`
+- `go run`
+- `go test`
+- `go fmt`
+- `gofmt`
+
 ## Build and verify
 
 After every change, run:
@@ -10,6 +19,8 @@ go build -o aac .
 Do not leave the project in a non-building state. If a change breaks the build, fix it before stopping.
 
 Run the full example from PLAN.md to verify basic correctness after any significant change.
+
+Run `go test ./...` after any change to interpreter, lexer, or builtins.
 
 ## Code style
 
@@ -44,8 +55,7 @@ Internal Go errors (file not found, etc.) can be in English to stderr.
 
 ## Do not
 
-- Do not add features not listed in PLAN.md.
+- Do not add features not listed in ROADMAP.md.
 - Do not add a REPL unless asked.
-- Do not add file I/O, imports, or module system.
 - Do not implement the `Ot-yhteys`, `Hkr`, `Blu-yhteys`, or `Cr-peli` blocks.
-- Do not change the binary name from `aa`.
+- Do not change the binary name from `aac`.

@@ -599,3 +599,163 @@ Sano: {result}`)
 		t.Errorf("got %q, want %q", out, "3\n")
 	}
 }
+
+func TestStringPilko(t *testing.T) {
+	out := runProgram(t, `Mu osat: Pilko "Aku,Iines,Hannu" ","
+Joka osat osa:
+  Sano: {osa}
+Loppu`)
+	want := "Aku\nIines\nHannu\n"
+	if out != want {
+		t.Errorf("got %q, want %q", out, want)
+	}
+}
+
+func TestStringPilk(t *testing.T) {
+	out := runProgram(t, `Mu osat: Pilk "yksi kaksi kolme" " "
+Sano: Pituus osat`)
+	if out != "3\n" {
+		t.Errorf("got %q, want %q", out, "3\n")
+	}
+}
+
+func TestStringKorvaa(t *testing.T) {
+	out := runProgram(t, `Mu tulos: Korvaa "Moi Aku" "Aku" "Iines"
+Sano: {tulos}`)
+	if out != "Moi Iines\n" {
+		t.Errorf("got %q, want %q", out, "Moi Iines\n")
+	}
+}
+
+func TestStringKorv(t *testing.T) {
+	out := runProgram(t, `Mu tulos: Korv "aabbcc" "bb" "XX"
+Sano: {tulos}`)
+	if out != "aaXXcc\n" {
+		t.Errorf("got %q, want %q", out, "aaXXcc\n")
+	}
+}
+
+func TestStringSisaltaaTrue(t *testing.T) {
+	out := runProgram(t, `Mu loytyy: Sisaltaa "Ankkalinna" "linna"
+Jos loytyy on kyllä:
+  Sano: kyllä
+Muuten:
+  Sano: ei
+Loppu`)
+	if out != "kyllä\n" {
+		t.Errorf("got %q, want %q", out, "kyllä\n")
+	}
+}
+
+func TestStringSisFalse(t *testing.T) {
+	out := runProgram(t, `Mu loytyy: Sis "Aku" "Iines"
+Jos loytyy on kyllä:
+  Sano: kyllä
+Muuten:
+  Sano: ei
+Loppu`)
+	if out != "ei\n" {
+		t.Errorf("got %q, want %q", out, "ei\n")
+	}
+}
+
+func TestStringTrimmaa(t *testing.T) {
+	out := runProgram(t, `Mu puhdas: Trimmaa "  Moi maailma  "
+Sano: {puhdas}`)
+	if out != "Moi maailma\n" {
+		t.Errorf("got %q, want %q", out, "Moi maailma\n")
+	}
+}
+
+func TestStringTrim(t *testing.T) {
+	out := runProgram(t, "Mu puhdas: Trim \"\tvälilehti\t\"\nSano: {puhdas}")
+	if out != "välilehti\n" {
+		t.Errorf("got %q, want %q", out, "välilehti\n")
+	}
+}
+
+func TestStringIsot(t *testing.T) {
+	out := runProgram(t, `Mu iso: Isot "moi aku"
+Sano: {iso}`)
+	if out != "MOI AKU\n" {
+		t.Errorf("got %q, want %q", out, "MOI AKU\n")
+	}
+}
+
+func TestStringPienet(t *testing.T) {
+	out := runProgram(t, `Mu pieni: Pienet "MOI AKU"
+Sano: {pieni}`)
+	if out != "moi aku\n" {
+		t.Errorf("got %q, want %q", out, "moi aku\n")
+	}
+}
+
+func TestStringPituusString(t *testing.T) {
+	out := runProgram(t, `Mu n: Pituus "Ankkalinna"
+Sano: {n}`)
+	if out != "10\n" {
+		t.Errorf("got %q, want %q", out, "10\n")
+	}
+}
+
+func TestStringPilkoEmpty(t *testing.T) {
+	// Splitting empty string by non-empty separator gives [""]
+	out := runProgram(t, `Mu osat: Pilko "" ","
+Mu n: Pituus osat
+Sano: {n}
+Mu eka: osat[1]
+Sano: {eka}`)
+	want := "1\n\n"
+	if out != want {
+		t.Errorf("got %q, want %q", out, want)
+	}
+}
+
+func TestStringPilkoSepNotFound(t *testing.T) {
+	// Separator not found returns single-element list with the whole string
+	out := runProgram(t, `Mu osat: Pilko "Hei" ","
+Mu n: Pituus osat
+Sano: {n}
+Mu eka: osat[1]
+Sano: {eka}`)
+	want := "1\nHei\n"
+	if out != want {
+		t.Errorf("got %q, want %q", out, want)
+	}
+}
+
+func TestStringTrimmaaEmpty(t *testing.T) {
+	out := runProgram(t, `Mu puhdas: Trimmaa ""
+Sano: ">{puhdas}<"`)
+	if out != "><\n" {
+		t.Errorf("got %q, want %q", out, "><\n")
+	}
+}
+
+func TestStringSisaltaaEmptySub(t *testing.T) {
+	// Empty substring is always found
+	out := runProgram(t, `Mu loytyy: Sisaltaa "abc" ""
+Jos loytyy on kyllä:
+  Sano: kyllä
+Loppu`)
+	if out != "kyllä\n" {
+		t.Errorf("got %q, want %q", out, "kyllä\n")
+	}
+}
+
+func TestStringKorvaaEmptyOld(t *testing.T) {
+	// Replacing empty string inserts between each character
+	out := runProgram(t, `Mu tulos: Korvaa "ab" "" "_"
+Sano: {tulos}`)
+	if out != "_a_b_\n" {
+		t.Errorf("got %q, want %q", out, "_a_b_\n")
+	}
+}
+
+func TestStringIsotUnicode(t *testing.T) {
+	out := runProgram(t, `Mu iso: Isot "ääkköset"
+Sano: {iso}`)
+	if out != "ÄÄKKÖSET\n" {
+		t.Errorf("got %q, want %q", out, "ÄÄKKÖSET\n")
+	}
+}

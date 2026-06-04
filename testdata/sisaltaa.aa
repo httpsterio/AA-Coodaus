@@ -1,0 +1,6 @@
+Mu loytyy: Sisaltaa "Ankkalinna" "linna"
+Jos loytyy on kyllä:
+  Sano: kyllä
+Muuten:
+  Sano: ei
+Loppu

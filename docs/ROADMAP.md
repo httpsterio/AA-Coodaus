@@ -1,6 +1,6 @@
 # AA-koodaus — Roadmap
 
-## Milestone 1 — Interpreter (current)
+## Milestone 1 — Interpreter ✅
 
 - [x] Lexer, parser, tree-walking interpreter
 - [x] Variables, arithmetic, booleans
@@ -35,12 +35,13 @@
 
 ## Milestone 3 — String operations
 
-- [x] `Pituus` for strings (already works for lists, extend it)
-- [ ] `Jaa merkkijono: str erotin` — split → list
-- [ ] `Korvaa: str vanha uusi` — replace
-- [ ] `Sisaltaa: str osa` — contains → boolean
-- [ ] `Trimmaa: str` — trim whitespace
-- [ ] `Isot: str` / `Pienet: str` — upper/lower case
+- [x] `Pituus` for strings
+- [ ] `Pilko` / `Pilk` — split string by separator → list
+- [ ] `Korvaa` / `Korv` — replace substring → string
+- [ ] `Sisaltaa` / `Sis` — contains substring → boolean
+- [ ] `Trimmaa` / `Trim` — trim whitespace → string
+- [ ] `Isot` — uppercase → string
+- [ ] `Pienet` — lowercase → string
 - [ ] Multiline string literal or heredoc syntax (TBD)
 - [ ] Tests
 
@@ -67,9 +68,10 @@
 
 ## Backlog / maybe someday
 
+- `Kv,ka` comma modifier system for list operations
 - Local scope for functions
 - `Ot-yhteys`, `Hkr`, `Blu-yhteys`, `Cr-peli` easter egg blocks
-- REPL (`aa` with no arguments)
+- REPL (`aac` with no arguments)
 - Watch mode / dev server for SSG
 - Error recovery (continue after first error instead of stopping)
 - Standard library split into separate files
