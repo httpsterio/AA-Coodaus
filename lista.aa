@@ -1,0 +1,9 @@
+Mu lista: [1 2 3 4]
+Mu n1: Pituus lista
+Sano: "Alkuperäinen pituus: {n1}"
+Lisää lista: 5
+Mu n2: Pituus lista
+Sano: "Uusi pituus: {n2}"
+Joka lista alkio:
+  Sano: {alkio}
+Loppu

@@ -1,0 +1,22 @@
+-- Arvausohjelma
+
+Mu arvo: 7
+Mu yritys: 0
+Mu oikein: ei
+
+Kysy arvaus: Arvaa luku 1-10:
+
+Kunnes oikein on kyllä:
+  Mu yritys: yritys + 1
+  Jos arvaus on arvo:
+    Mu oikein: kyllä
+    Sano: "Oikein! Yrityksiä: {yritys}"
+  Muuten:
+    Jos arvaus alle arvo:
+      Sano: Liian pieni
+    Muuten:
+      Sano: Liian suuri
+    Loppu
+    Kysy arvaus: Yritä uudestaan:
+  Loppu
+Loppu
