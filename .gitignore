@@ -1,0 +1,22 @@
+# binary
+aa
+aac
+aac.exe
+
+# release archives
+*.tar.gz
+*.zip
+
+# Go build cache
+*.test
+*.out
+
+# editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

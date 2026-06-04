@@ -4,7 +4,7 @@
 
 After every change, run:
 ```sh
-go build -o aa .
+go build -o aac .
 ```
 
 Do not leave the project in a non-building state. If a change breaks the build, fix it before stopping.

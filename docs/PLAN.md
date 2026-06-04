@@ -250,7 +250,7 @@ Loppu
 - Binary name: `aa`
 - Usage: `aa script.aa`
 - Shebang support: `#!/usr/bin/env aa`
-- `go build -o aa .` must produce a working binary with no errors or warnings.
+- `go build -o aac .` must produce a working binary with no errors or warnings.
 
 ## File structure
 
