@@ -98,7 +98,8 @@ func (e *Env) Set(name string, val Val) {
 }
 
 type returnValue struct {
-	val Val
+	val  Val
+	line int
 }
 
 // Evaluator walks the AST and executes it.
@@ -145,6 +146,14 @@ func Interpolate(s string, env *Env, line int) string {
 }
 
 func (e *Evaluator) Evaluate(program []Stmt) {
+	defer func() {
+		if r := recover(); r != nil {
+			if ret, ok := r.(returnValue); ok {
+				ShowError(ret.line, "Anna toimii vain funktion sisällä.")
+			}
+			panic(r)
+		}
+	}()
 	e.evalStatements(program)
 }
 
@@ -181,7 +190,7 @@ func (e *Evaluator) evalStatement(stmt Stmt) {
 		e.evalExpr(s.Call, false)
 	case *AnnaStmt:
 		val := e.evalExpr(s.Val, true)
-		panic(returnValue{val: val})
+		panic(returnValue{val: val, line: s.Line})
 	case *LisaaStmt:
 		e.evalLisaaStmt(s)
 	case *JokaStmt:
