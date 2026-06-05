@@ -18,7 +18,7 @@ go build -o aac .
 
 Do not leave the project in a non-building state. If a change breaks the build, fix it before stopping.
 
-Run the full example from PLAN.md to verify basic correctness after any significant change.
+Run examples/arvaus.aa to verify basic correctness after any significant change.
 
 Run `go test ./...` after any change to interpreter, lexer, or builtins.
 
