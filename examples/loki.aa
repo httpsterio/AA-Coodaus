@@ -1,0 +1,24 @@
+-- Noppaloki
+
+Mu lokitiedosto: "noppa-loki.txt"
+
+Mu tiedosto_olemassa: Onko tiedosto lokitiedosto
+Jos tiedosto_olemassa on ei:
+  Kirjoita tiedosto lokitiedosto "Noppaloki\n"
+Loppu
+
+Sano: Aloitetaan. Kirjoita ei lopettaaksesi.
+
+Loputon:
+  Kysy jatko: Heitä noppaa?
+  Jos jatko on ei:
+    Lopeta
+  Loppu
+
+  Mu tulos: Satunnainen 1 6
+  Sano: "Sait: {tulos}"
+  Liitä tiedosto lokitiedosto "{tulos}\n"
+Loppu
+
+Mu sisalto: Lue tiedosto lokitiedosto
+Sano: "Loki tallennettu tiedostoon {lokitiedosto}"

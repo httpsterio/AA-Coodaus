@@ -1,4 +1,4 @@
-# AA-koodaus — Roadmap
+# AA-coodaus — Roadmap
 
 ## Milestone 1 — Interpreter ✅
 
@@ -33,7 +33,7 @@
 - [x] `Luo hakemisto: polku` / `Luohak: polku` — create directory (mkdir -p)
 - [x] Cross-platform path handling (via Go stdlib)
 - [x] Tests for all file operations (13 unit tests with t.TempDir())
-- [x] Shorthand/alias forms without modifier word (`Kirjoita`, `Ylikirjoita`, `Liitä` without `tiedosto`)
+- [x] Shorthand/alias forms without modifier word
 
 ---
 
@@ -51,22 +51,47 @@
 
 ---
 
-## Milestone 4 — Static site generator
+## Milestone 4 — Satunnainen ja Lopeta ✅
 
-- [ ] `Muunna markdown: sisalto` — markdown to HTML (bundles Go markdown lib, first external dep)
-- [ ] `Tuo: tiedosto.aa` — import/include other `.aa` files
-- [ ] Reference SSG implementation in `examples/ssg/`
-- [ ] Docs: how to build a site with AA-koodaus
+- [x] `Satunnainen` / `Satu` — random integer or float
+- [x] `Lopeta` / `Lopt` — break out of innermost loop
+- [x] Doc fixes: modulo, Pituus for strings, Satunnainen and Lopeta in reference.md
 
 ---
 
-## Milestone 5 — VS Code extension
+## Milestone 5 — Language polish
+
+- [ ] Fix `Onko` parser precedence — `Jos Onko tiedosto polku on ei:` should parse correctly without temp variable
+- [ ] Indexed list assignment — `Mu lista[i]: arvo`
+- [ ] Tests for both
+
+---
+
+## Milestone 6 — Math
+
+- [ ] `Tasaa arvo desimaalit` — round to N decimal places
+- [ ] `Lattia arvo` — floor
+- [ ] `Katto arvo` — ceil
+
+---
+
+## Milestone 7 — Static site generator
+
+- [ ] `Muunna markdown: sisalto` — markdown to HTML (first external dep)
+- [ ] `Tuo: tiedosto.aa` — import/include other `.aa` files
+- [ ] Reference SSG implementation in `examples/ssg/`
+- [ ] Docs: how to build a site with AA-coodaus
+
+---
+
+## Milestone 8 — VS Code extension
 
 - [ ] TextMate grammar for `.aa` files
 - [ ] Keyword, boolean, string, comment, number highlighting
 - [ ] Interpolation highlighting inside strings (`{muuttuja}`)
-- [ ] Separate repo
+- [ ] Same repo, `plugins/vscode-aacoodaus/` subfolder
 - [ ] Distribute as `.vsix` and publish to VS Code marketplace
+- [ ] GitHub Actions: build and attach `.vsix` to release
 
 ---
 
@@ -79,3 +104,4 @@
 - Watch mode / dev server for SSG
 - Error recovery (continue after first error instead of stopping)
 - Standard library split into separate files
+- Multiline strings / heredoc syntax

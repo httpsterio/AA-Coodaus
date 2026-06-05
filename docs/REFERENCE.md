@@ -1,4 +1,4 @@
-# AA-koodaus — Keyword reference
+# AA-coodaus — Keyword reference
 
 Complete keyword reference. All keywords are case-sensitive, first letter capitalized.
 
@@ -43,6 +43,16 @@ Modifier words like `tiedosto` / `hakemisto` are optional — commands work with
 | `alle` | less than |
 | `yli-on` | greater than or equal |
 | `alle-on` | less than or equal |
+
+### Arithmetic operators
+
+| Operator | Meaning |
+|---|---|
+| `+` | addition, string concatenation |
+| `-` | subtraction, negation |
+| `*` | multiplication |
+| `/` | division |
+| `%` | modulo (remainder) |
 
 ---
 
@@ -109,11 +119,21 @@ Interpolation: `{muuttuja}` inside strings.
 
 ---
 
+## Random and loop control
+
+| Keyword | Alias | Syntax | Returns | Notes |
+|---|---|---|---|---|
+| `Satunnainen` | `Satu` | `Satunnainen min max` | integer | Random integer between min and max, inclusive. |
+| `Satunnainen` | `Satu` | `Satunnainen min max desimaalit` | float | Random float with N decimal places (0–10). |
+| `Lopeta` | `Lopt` | `Lopeta` | — | Break out of innermost loop. |
+
+---
+
 ## Types
 
 | Type | Values | Notes |
 |---|---|---|
 | number | `5`, `3.14` | Integer or float. |
-| string | `Aku`, `"moi maailma"` | Bare single-word or quoted. |
+| string | `Aku`, `"moi maailma"` | Bare single-word or quoted. Numeric strings (`"42"`, `"3.14"`) are automatically coerced to numbers in arithmetic and comparisons. |
 | boolean | `kyllä`, `ei` | Distinct type. Never equal to numbers or strings. |
 | list | `[1 2 3]` | 1-based indexing. |

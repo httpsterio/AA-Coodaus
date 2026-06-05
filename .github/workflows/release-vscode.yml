@@ -1,0 +1,35 @@
+name: Release VS Code extension
+
+on:
+  push:
+    tags:
+      - 'vscode-v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Build extension
+        working-directory: plugins/vscode-aacoodaus
+        run: |
+          npm install
+          vsce package --out aa-coodaus-${{ github.ref_name }}.vsix
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: plugins/vscode-aacoodaus/aa-coodaus-${{ github.ref_name }}.vsix

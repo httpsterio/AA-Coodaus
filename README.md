@@ -1,4 +1,4 @@
-# AA-koodaus
+# AA-coodaus
 
 Someone had to do it. AA-coodaus is a real, working programming language with abbreviated
 Finnish syntax, hyphen-compound commands, and zero regrets.
@@ -204,7 +204,7 @@ See the `examples/` folder for complete programs:
 go test ./...
 ```
 
-37 golden tests in `testdata/`, plus lexer and interpreter unit tests.
+39 golden tests in `testdata/`, plus lexer and interpreter unit tests.
 
 ---
 

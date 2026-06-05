@@ -1,22 +1,24 @@
 -- Arvausohjelma
 
-Mu arvo: 7
-Mu yritys: 0
+Mu arvo: Satunnainen 1 100
+Mu yritykset: 0
 Mu oikein: ei
 
-Kysy arvaus: Arvaa luku 1-10:
+Sano: "Arvaa luku väliltä 1-100"
 
-Kunnes oikein on kyllä:
-  Mu yritys: yritys + 1
+Loputon:
+  Kysy arvaus: Arvauksesi:
+  Mu yritykset: yritykset + 1
+
   Jos arvaus on arvo:
     Mu oikein: kyllä
-    Sano: "Oikein! Yrityksiä: {yritys}"
+    Sano: "Oikein! Löysit luvun {arvo} yrityskerroilla {yritykset}"
+    Lopeta
+  Loppu
+
+  Jos arvaus alle arvo:
+    Sano: Liian pieni
   Muuten:
-    Jos arvaus alle arvo:
-      Sano: Liian pieni
-    Muuten:
-      Sano: Liian suuri
-    Loppu
-    Kysy arvaus: Yritä uudestaan:
+    Sano: Liian suuri
   Loppu
 Loppu

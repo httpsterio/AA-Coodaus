@@ -1,0 +1,20 @@
+-- Nopanheitto
+
+Kysy maara: Montako noppaa?
+Kysy sivut: Montako sivua nopassa?
+
+Mu yhteensa: 0
+Mu tulokset: []
+
+Tois maara i:
+  Mu tulos: Satunnainen 1 sivut
+  Lisää tulokset: tulos
+  Mu yhteensa: yhteensa + tulos
+Loppu
+
+Sano: "Tulokset:"
+Joka tulokset t:
+  Sano: {t}
+Loppu
+
+Sano: "Yhteensä: {yhteensa}"

@@ -967,3 +967,128 @@ func TestLuoHakemistoNested(t *testing.T) {
 		t.Errorf("nested directory should exist: %v", err)
 	}
 }
+
+func TestSatunnainenIntRange(t *testing.T) {
+	for i := 0; i < 20; i++ {
+		out := runProgram(t, "Mu n: Satunnainen 1 6\nSano: \"{n}\"")
+		out = strings.TrimSpace(out)
+		if out != "1" && out != "2" && out != "3" && out != "4" && out != "5" && out != "6" {
+			t.Errorf("expected 1-6, got %q", out)
+		}
+	}
+}
+
+func TestSatunnainenFloatRange(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		out := runProgram(t, "Mu n: Satunnainen 0 100 2\nSano: \"{n}\"")
+		out = strings.TrimSpace(out)
+		if !strings.Contains(out, ".") {
+			t.Errorf("expected decimal, got %q", out)
+		}
+	}
+}
+
+func TestSatunnainenSatuAlias(t *testing.T) {
+	out := runProgram(t, "Mu n: Satu 1 1\nSano: \"{n}\"")
+	out = strings.TrimSpace(out)
+	if out != "1" {
+		t.Errorf("expected 1, got %q", out)
+	}
+}
+
+func TestLopetaBreakTois(t *testing.T) {
+	out := runProgram(t, `Mu tulos: ""
+Tois 10 i:
+  Jos i on 4:
+    Lopeta
+  Loppu
+  Mu tulos: tulos + i
+Loppu
+Sano: "{tulos}"`)
+	out = strings.TrimSpace(out)
+	if out != "123" {
+		t.Errorf("expected 123, got %q", out)
+	}
+}
+
+func TestLopetaBreakLoputon(t *testing.T) {
+	out := runProgram(t, `Mu laskuri: 0
+Mu tulos: ""
+Loputon:
+  Mu laskuri: laskuri + 1
+  Jos laskuri on 3:
+    Lopeta
+  Loppu
+  Mu tulos: tulos + laskuri
+Loppu
+Sano: "{tulos}"`)
+	out = strings.TrimSpace(out)
+	if out != "12" {
+		t.Errorf("expected 12, got %q", out)
+	}
+}
+
+func TestLopetaBreakJoka(t *testing.T) {
+	out := runProgram(t, `Mu tulos: ""
+Joka [1 2 3 4 5] alkio:
+  Jos alkio on 3:
+    Lopeta
+  Loppu
+  Mu tulos: tulos + alkio
+Loppu
+Sano: "{tulos}"`)
+	out = strings.TrimSpace(out)
+	if out != "12" {
+		t.Errorf("expected 12, got %q", out)
+	}
+}
+
+func TestLopetaBreakKunnes(t *testing.T) {
+	out := runProgram(t, `Mu laskuri: 0
+Mu tulos: ""
+Kunnes laskuri on 10:
+  Mu laskuri: laskuri + 1
+  Jos laskuri on 4:
+    Lopeta
+  Loppu
+  Mu tulos: tulos + laskuri
+Loppu
+Sano: "{tulos}"`)
+	out = strings.TrimSpace(out)
+	if out != "123" {
+		t.Errorf("expected 123, got %q", out)
+	}
+}
+
+func TestLopetaNestedLoopBreakInner(t *testing.T) {
+	out := runProgram(t, `Mu tulos: ""
+Tois 3 i:
+  Tois 5 j:
+    Jos j on 3:
+      Lopeta
+    Loppu
+    Mu tulos: tulos + j
+  Loppu
+  Mu tulos: tulos + "-"
+Loppu
+Sano: "{tulos}"`)
+	out = strings.TrimSpace(out)
+	if out != "12-12-12-" {
+		t.Errorf("expected 12-12-12-, got %q", out)
+	}
+}
+
+func TestLopetaAliasLopt(t *testing.T) {
+	out := runProgram(t, `Mu tulos: ""
+Tois 3 i:
+  Jos i on 2:
+    Lopt
+  Loppu
+  Mu tulos: tulos + i
+Loppu
+Sano: "{tulos}"`)
+	out = strings.TrimSpace(out)
+	if out != "1" {
+		t.Errorf("expected 1, got %q", out)
+	}
+}

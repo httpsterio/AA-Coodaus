@@ -1,12 +1,12 @@
 # Task
 
-Build a complete, working interpreter for a programming language called AA-koodaus. Deliver all source files ready to build.
+Build a complete, working interpreter for a programming language called AA-coodaus. Deliver all source files ready to build.
 
 ---
 
 ## Language overview
 
-AA-koodaus is a Finnish meme programming language. Its syntax is abbreviated Finnish with no word inflection (nominative case only), hyphen-compound commands, and comma-chained modifiers. It must feel internally consistent.
+AA-coodaus is a Finnish meme programming language. Its syntax is abbreviated Finnish with no word inflection (nominative case only), hyphen-compound commands, and comma-chained modifiers. It must feel internally consistent.
 
 ---
 

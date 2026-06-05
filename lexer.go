@@ -348,6 +348,12 @@ const (
 	TOKEN_LUOHAK     TokenType = "Luohak"
 	TOKEN_ONKO       TokenType = "Onko"
 
+	// Milestone 4
+	TOKEN_SATUNNAINEN TokenType = "Satunnainen"
+	TOKEN_SATU        TokenType = "Satu"
+	TOKEN_LOPETA      TokenType = "Lopeta"
+	TOKEN_LOPT        TokenType = "Lopt"
+
 	// Operators
 	TOKEN_PLUS    TokenType = "+"
 	TOKEN_MINUS   TokenType = "-"
@@ -403,6 +409,10 @@ var keywords = map[string]TokenType{
 	"Luo":       TOKEN_LUO,
 	"Luohak":    TOKEN_LUOHAK,
 	"Onko":      TOKEN_ONKO,
+	"Satunnainen": TOKEN_SATUNNAINEN,
+	"Satu":        TOKEN_SATU,
+	"Lopeta":      TOKEN_LOPETA,
+	"Lopt":        TOKEN_LOPT,
 	"on":       TOKEN_ON,
 	"ei":       TOKEN_EI,
 	"yli":      TOKEN_YLI,

@@ -339,6 +339,21 @@ type JokaStmt struct {
 
 func (s *JokaStmt) stmtNode() {}
 
+type LopetaStmt struct {
+	astNode
+}
+
+func (s *LopetaStmt) stmtNode() {}
+
+type SatunnainenExpr struct {
+	astNode
+	Min        Expr
+	Max        Expr
+	Desimaalit Expr // nil means integer result
+}
+
+func (s *SatunnainenExpr) exprNode() {}
+
 // Parser struct and logic
 type Parser struct {
 	l         *Lexer
@@ -474,6 +489,11 @@ func (p *Parser) parseStatement() Stmt {
 		return p.parseLuoHakemistoStmt()
 	case TOKEN_LUOHAK:
 		return p.parseLuohakStmt()
+	case TOKEN_LOPETA, TOKEN_LOPT:
+		stmt := &LopetaStmt{astNode: astNode{Line: tok.Line}}
+		p.nextToken()
+		p.consumeStatementTerminator()
+		return stmt
 	default:
 		ShowError(tok.Line, "Tuntematon lauseke tai komento: %s", tok.Literal)
 		return nil
@@ -818,6 +838,8 @@ func (p *Parser) findPrefixHandler(t TokenType) func() Expr {
 		return p.parseListaaExpr
 	case TOKEN_ONKO:
 		return p.parseOnkoExpr
+	case TOKEN_SATUNNAINEN, TOKEN_SATU:
+		return p.parseSatunnainenExpr
 	}
 	return nil
 }
@@ -1058,6 +1080,26 @@ func (p *Parser) parseOnkoExpr() Expr {
 	}
 }
 
+func (p *Parser) parseSatunnainenExpr() Expr {
+	tok := p.curToken
+	p.nextToken() // consume Satunnainen/Satu
+
+	min := p.parseExpression(LOWEST)
+	max := p.parseExpression(LOWEST)
+
+	var desimaalit Expr
+	if p.canStartExpression(p.curToken) {
+		desimaalit = p.parseExpression(LOWEST)
+	}
+
+	return &SatunnainenExpr{
+		astNode:    astNode{Line: tok.Line},
+		Min:        min,
+		Max:        max,
+		Desimaalit: desimaalit,
+	}
+}
+
 func (p *Parser) parseKirjoitaStmt() Stmt {
 	tok := p.curToken
 	p.nextToken() // consume Kirjoita/Kirj
@@ -1134,7 +1176,7 @@ func (p *Parser) parseLuohakStmt() Stmt {
 
 func (p *Parser) canStartExpression(tok Token) bool {
 	switch tok.Type {
-	case TOKEN_IDENT, TOKEN_NUMBER, TOKEN_STRING, TOKEN_LBRACKET, TOKEN_KYLLA, TOKEN_EI, TOKEN_PITUUS, TOKEN_TEE, TOKEN_MINUS, TOKEN_PILKO, TOKEN_KORVAA, TOKEN_SISALTAA, TOKEN_TRIMMAA, TOKEN_ISOT, TOKEN_PIENET, TOKEN_LUE, TOKEN_LISTAA, TOKEN_HAK, TOKEN_ONKO:
+	case TOKEN_IDENT, TOKEN_NUMBER, TOKEN_STRING, TOKEN_LBRACKET, TOKEN_KYLLA, TOKEN_EI, TOKEN_PITUUS, TOKEN_TEE, TOKEN_MINUS, TOKEN_PILKO, TOKEN_KORVAA, TOKEN_SISALTAA, TOKEN_TRIMMAA, TOKEN_ISOT, TOKEN_PIENET, TOKEN_LUE, TOKEN_LISTAA, TOKEN_HAK, TOKEN_ONKO, TOKEN_SATUNNAINEN, TOKEN_SATU:
 		return true
 	}
 	return false

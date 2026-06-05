@@ -4,10 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"math"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
 )
+
+type loopBreak struct{}
 
 // Val represents a runtime value in the interpreter.
 type Val interface {
@@ -104,8 +107,9 @@ type returnValue struct {
 
 // Evaluator walks the AST and executes it.
 type Evaluator struct {
-	env    *Env
-	reader *bufio.Reader
+	env       *Env
+	reader    *bufio.Reader
+	loopDepth int
 }
 
 func NewEvaluator(env *Env) *Evaluator {
@@ -203,6 +207,11 @@ func (e *Evaluator) evalStatement(stmt Stmt) {
 		e.evalLiitaStmt(s)
 	case *LuoHakemistoStmt:
 		e.evalLuoHakemistoStmt(s)
+	case *LopetaStmt:
+		if e.loopDepth == 0 {
+			ShowError(s.Line, "Lopeta toimii vain silmukan sisällä.")
+		}
+		panic(loopBreak{})
 	default:
 		ShowError(stmt.LineNumber(), "Tuntematon lauseketyyppi suorituksessa.")
 	}
@@ -294,6 +303,17 @@ func (e *Evaluator) evalToisStmt(stmt *ToisStmt) {
 		return
 	}
 
+	e.loopDepth++
+	defer func() { e.loopDepth-- }()
+	defer func() {
+		if r := recover(); r != nil {
+			if _, ok := r.(loopBreak); ok {
+				return
+			}
+			panic(r)
+		}
+	}()
+
 	if stmt.VarName != "" {
 		oldVal, exists := e.env.vars[stmt.VarName]
 		for i := 1; i <= count; i++ {
@@ -313,12 +333,32 @@ func (e *Evaluator) evalToisStmt(stmt *ToisStmt) {
 }
 
 func (e *Evaluator) evalLoputonStmt(stmt *LoputonStmt) {
+	e.loopDepth++
+	defer func() { e.loopDepth-- }()
+	defer func() {
+		if r := recover(); r != nil {
+			if _, ok := r.(loopBreak); ok {
+				return
+			}
+			panic(r)
+		}
+	}()
 	for {
 		e.evalStatements(stmt.Body)
 	}
 }
 
 func (e *Evaluator) evalKunnesStmt(stmt *KunnesStmt) {
+	e.loopDepth++
+	defer func() { e.loopDepth-- }()
+	defer func() {
+		if r := recover(); r != nil {
+			if _, ok := r.(loopBreak); ok {
+				return
+			}
+			panic(r)
+		}
+	}()
 	for {
 		val := e.evalExpr(stmt.Cond, false)
 		boolVal, ok := val.(*BoolVal)
@@ -351,6 +391,17 @@ func (e *Evaluator) evalJokaStmt(stmt *JokaStmt) {
 	if !ok {
 		ShowError(stmt.Line, "Joka-silmukka vaatii listan, saatiin %s.", val.Type())
 	}
+
+	e.loopDepth++
+	defer func() { e.loopDepth-- }()
+	defer func() {
+		if r := recover(); r != nil {
+			if _, ok := r.(loopBreak); ok {
+				return
+			}
+			panic(r)
+		}
+	}()
 
 	oldVal, exists := e.env.vars[stmt.VarName]
 
@@ -415,6 +466,8 @@ func (e *Evaluator) evalExpr(expr Expr, allowBareString bool) Val {
 		return e.evalListaaExpr(ex)
 	case *OnkoExpr:
 		return e.evalOnkoExpr(ex)
+	case *SatunnainenExpr:
+		return e.evalSatunnainenExpr(ex)
 	default:
 		ShowError(expr.LineNumber(), "Tuntematon lauseketyyppi laskennassa.")
 		return nil
@@ -588,6 +641,47 @@ func (e *Evaluator) evalOnkoExpr(expr *OnkoExpr) Val {
 		return &BoolVal{Value: !info.IsDir()}
 	}
 	return &BoolVal{Value: info.IsDir()}
+}
+
+func (e *Evaluator) evalSatunnainenExpr(expr *SatunnainenExpr) Val {
+	minVal := e.evalExpr(expr.Min, false)
+	maxVal := e.evalExpr(expr.Max, false)
+
+	minNum, ok := minVal.(*NumberVal)
+	if !ok {
+		ShowError(expr.Line, "Satunnainen vaatii lukuarvon minimiksi, saatiin %s.", minVal.Type())
+	}
+	maxNum, ok := maxVal.(*NumberVal)
+	if !ok {
+		ShowError(expr.Line, "Satunnainen vaatii lukuarvon maksimiksi, saatiin %s.", maxVal.Type())
+	}
+
+	if minNum.Value > maxNum.Value {
+		ShowError(expr.Line, "Satunnainen: minimi ei voi olla suurempi kuin maksimi.")
+	}
+
+	min := int(minNum.Value)
+	max := int(maxNum.Value)
+
+	if expr.Desimaalit == nil {
+		return &NumberVal{Value: float64(rand.Intn(max-min+1) + min), IsInt: true}
+	}
+
+	desVal := e.evalExpr(expr.Desimaalit, false)
+	desNum, ok := desVal.(*NumberVal)
+	if !ok {
+		ShowError(expr.Line, "Satunnainen: desimaalien määrän tulee olla luku, saatiin %s.", desVal.Type())
+	}
+
+	des := int(desNum.Value)
+	if des < 0 || des > 10 {
+		ShowError(expr.Line, "Satunnainen: desimaalien määrän tulee olla 0–10.")
+	}
+
+	val := minNum.Value + rand.Float64()*(maxNum.Value-minNum.Value)
+	pow := math.Pow(10, float64(des))
+	rounded := math.Round(val*pow) / pow
+	return &NumberVal{Value: rounded, IsInt: des == 0}
 }
 
 func (e *Evaluator) evalKirjoitaStmt(stmt *KirjoitaStmt) {

@@ -1,0 +1,17 @@
+-- Noppatilasto (WIP — list indeksiin kirjoitus ei toimi vielä)
+-- TODO: korvaa Mu tulokset[tulos] kun kielen tuki on valmis
+
+Mu heitot: 1000
+Mu tulokset: [0 0 0 0 0 0]
+
+Tois heitot:
+  Mu tulos: Satunnainen 1 6
+  Mu nykyinen: tulokset[tulos]
+  Mu tulokset[tulos]: nykyinen + 1
+Loppu
+
+Sano: "Tulokset {heitot} heitosta:"
+Tois 6 i:
+  Mu maara: tulokset[i]
+  Sano: "{i}: {maara}"
+Loppu

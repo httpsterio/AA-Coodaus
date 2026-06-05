@@ -1,0 +1,8 @@
+Mu tulos: ""
+Tois 10 i:
+  Jos i on 4:
+    Lopeta
+  Loppu
+  Mu tulos: tulos + i
+Loppu
+Sano: "{tulos}"
