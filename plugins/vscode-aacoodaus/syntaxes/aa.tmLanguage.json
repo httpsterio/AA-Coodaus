@@ -1,0 +1,100 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "AA-coodaus",
+  "scopeName": "source.aa",
+  "patterns": [
+    { "include": "#strings" },
+    { "include": "#comments" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#operators" },
+    { "include": "#interpolation" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "strings": {
+      "name": "string.quoted.double.aa",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.aa",
+          "match": "\\\\[nt\\\\\"]"
+        },
+        {
+          "include": "#interpolation"
+        }
+      ]
+    },
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.shebang.aa",
+          "match": "^#!.*$"
+        },
+        {
+          "name": "comment.line.double-dash.aa",
+          "match": "--.*$"
+        }
+      ]
+    },
+
+    "numbers": {
+      "name": "constant.numeric.aa",
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+    },
+
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.aa",
+          "match": "\\b(Jos|Muuten|Loppu|Tois|Kunnes|Loputon|Joka|Teko|Tee|Anna)\\b"
+        },
+        {
+          "name": "keyword.other.aa",
+          "match": "\\b(Mu|Sano|Kysy|Lisää|Pituus|Pilko|Pilk|Korvaa|Korv|Sisaltaa|Sis|Trimmaa|Trim|Isot|Pienet|Lue|Kirjoita|Kirj|Ylikirjoita|Ylikirj|Liitä|Liit|Listaa|Hak|Luo|Luohak|Onko)\\b"
+        },
+        {
+          "name": "constant.language.boolean.aa",
+          "match": "\\b(kyllä)\\b"
+        }
+      ]
+    },
+
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.aa",
+          "match": "\\b(yli-on|alle-on|on|yli|alle)\\b"
+        },
+        {
+          "name": "keyword.operator.arithmetic.aa",
+          "match": "[\\+\\-\\*\\/%]"
+        }
+      ]
+    },
+
+    "interpolation": {
+      "name": "variable.other.interpolation.aa",
+      "match": "\\{[A-Za-zÅÄÖåäö_][A-Za-z0-9ÅÄÖåäö_-]*\\}"
+    },
+
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.key-value.aa",
+          "match": ":"
+        },
+        {
+          "name": "punctuation.definition.bracket.square.aa",
+          "match": "\\["
+        },
+        {
+          "name": "punctuation.definition.bracket.square.aa",
+          "match": "\\]"
+        }
+      ]
+    }
+  }
+}

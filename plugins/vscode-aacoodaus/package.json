@@ -1,0 +1,36 @@
+{
+  "name": "aakoodaus",
+  "displayName": "AA-coodaus",
+  "description": "Syntax highlighting for AA-coodaus (.aa files)",
+  "version": "0.1.0",
+  "publisher": "aakoodaus",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "aakoodaus",
+        "aliases": [
+          "AA-coodaus",
+          "aa"
+        ],
+        "extensions": [
+          ".aa"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "aakoodaus",
+        "scopeName": "source.aa",
+        "path": "./syntaxes/aa.tmLanguage.json"
+      }
+    ]
+  }
+}
